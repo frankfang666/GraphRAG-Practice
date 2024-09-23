@@ -24,7 +24,9 @@ const MyMenu = ({ originalElements, setElements, handleButtonClick, search, hand
 
   const onClick = (e) => {
     if (e.key === 'search') {
-      if (search) setSelectedKeys([]);
+      if (search) {
+        setSelectedKeys([]);
+      }
       else setSelectedKeys([e.key]); // 取消高亮
       handleSearchButton();
       return;

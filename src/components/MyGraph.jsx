@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 
-const MyGraph = ({ elements, setModalInfo, marginRight, setMarginRight }) => {
+const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, marginBottom, setMarginBottom }) => {
   const cyRef = useRef(null);
 
   // Define the layout of the graph using useMemo
@@ -55,10 +55,10 @@ const MyGraph = ({ elements, setModalInfo, marginRight, setMarginRight }) => {
           label: node.data('label'),
           content: node.data('content')
         });
-        setMarginRight(0);
+        setMarginBottom(15);
       });
     }
-  }, [setModalInfo, setMarginRight]);
+  }, [setModalInfo, setMarginBottom]);
 
   useEffect(() => {
     if (cyRef.current) {
@@ -66,16 +66,20 @@ const MyGraph = ({ elements, setModalInfo, marginRight, setMarginRight }) => {
     }
   }, [elements, layout]);
 
-  useEffect(() => {
-    console.log('Elements passed to MyGraph:', elements);
-  }, [elements]);
-
   return (
     <CytoscapeComponent
       cy={(cy) => { cyRef.current = cy; }}
       elements={elements}
       layout={layout}
-      style={{ width: '55%', height: '90%', border: '1px solid lightgray', borderRadius: '10px', marginRight: `${marginRight}%` }}
+      style={{ 
+        width: `${width}%`, 
+        height: `${90 - marginBottom-10}%`, 
+        border: '1px solid lightgray', 
+        borderRadius: '10px', 
+        marginTop: '0%', 
+        marginRight: `${marginRight}%`, 
+        marginBottom: `${marginBottom}%` 
+      }}
       stylesheet={stylesheet}
     />
   );

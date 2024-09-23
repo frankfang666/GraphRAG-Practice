@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MyGraph from './components/MyGraph';
 import MyMenu from './components/MyMenu';
 import ModalCard from './components/ModalCard';
-import InputArea from './components/InputArea'; // 引入新的 MyDisplay 组件
+import SearchArea from './components/search/SearchArea';
 
 const App = () => {
   const [elements, setElements] = useState([]);
@@ -10,8 +10,10 @@ const App = () => {
   const [showGraph, setShowGraph] = useState(false);
   const [modalInfo, setModalInfo] = useState(null);
   const [marginRight, setMarginRight] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [marginBottom, setMarginBottom] = useState(0);
   const [search, setSearch] = useState(false);
+
+  const middleWidth = 55;
 
   const fetchData = async () => {
     try {
@@ -71,20 +73,12 @@ const App = () => {
   
   const handleSearchButton = () => {
     setSearch(!search);
+    setMarginRight(0);
   };
 
   const closeModal = () => {
-    setMarginRight(0);
+    setMarginBottom(0);
     setModalInfo(null);
-  };
-
-  const handleSearch = (value) => {
-    setLoading(true);
-    // Simulate a network request
-    setTimeout(() => {
-      setLoading(false);
-      console.log('Search value:', value);
-    }, 2000);
   };
 
   return (
@@ -108,29 +102,29 @@ const App = () => {
         <div style={{ position: 'absolute', left: 0, top: '5%', width: '15%', height: '400px' }}>
           <MyMenu originalElements={originalElements} setElements={setElements} search={search} handleButtonClick={handleButtonClick} handleSearchButton={handleSearchButton} /> {/* Pass originalElements to MyMenu */}
         </div>
-        {showGraph ? 
-            <MyGraph elements={elements}
-                    setModalInfo={setModalInfo} 
-                    marginRight={marginRight} 
-                    setMarginRight={setMarginRight}/> : 
-                    <div style={{ 
-                          width: '55%', 
-                          height: '90%', 
-                          border: '1px solid lightgray', 
-                          borderRadius: '10px', 
-                          marginRight: marginRight  }}
-                    />
-        }
-        <ModalCard modalInfo={modalInfo} closeModal={closeModal} /> {/* 使用新的 ModalCard 组件 */}
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}>
+          {showGraph ? 
+              <MyGraph elements={elements}
+                      setModalInfo={setModalInfo}
+                      width={middleWidth}
+                      marginRight={marginRight} 
+                      setMarginRight={setMarginRight}
+                      marginBottom={marginBottom}
+                      setMarginBottom={setMarginBottom}/> : 
+                      <div style={{ 
+                            width: `${middleWidth}%`, 
+                            height: '90%', 
+                            border: '1px solid lightgray', 
+                            borderRadius: '10px', 
+                            marginRight: marginRight  }}
+                      />
+          }
+          <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={`${middleWidth}%`} /> {/* 使用新的 ModalCard 组件 */}
+        </div>
+        { search ? 
+          <SearchArea model={'qwen2:7b'}/> : null
+        } 
       </div>
-      { search ? 
-        <InputArea 
-          handleButtonClick={handleButtonClick} 
-          handleSearch={handleSearch} 
-          loading={loading}
-          style={{ width: '200%' }} 
-        /> : null
-      } 
     </div>
   );
 };
