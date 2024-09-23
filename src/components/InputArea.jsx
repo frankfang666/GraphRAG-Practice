@@ -1,6 +1,5 @@
 import React from 'react';
 import { Input } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
 import Uploader from './Uploader';
 
 const { Search } = Input;
@@ -11,7 +10,7 @@ const InputArea = ({ handleSearch, loading }) => {
       <Search 
         placeholder="请输入你的问题" 
         loading={loading} 
-        enterButton={<SendOutlined />}
+        enterButton="搜索"
         onSearch={handleSearch} 
         style={{ width: '100%' }} // 设置输入框宽度
       />

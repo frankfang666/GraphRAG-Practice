@@ -11,6 +11,7 @@ const App = () => {
   const [modalInfo, setModalInfo] = useState(null);
   const [marginRight, setMarginRight] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -67,6 +68,10 @@ const App = () => {
     fetchData();
     setShowGraph(true);
   };
+  
+  const handleSearchButton = () => {
+    setSearch(!search);
+  };
 
   const closeModal = () => {
     setMarginRight(0);
@@ -89,7 +94,7 @@ const App = () => {
                   justifyContent: 'center', 
                   alignItems: 'center', 
                   height: '100vh' 
-                  }}
+                }}
     >
       <div style={{ 
                     display: 'flex', 
@@ -98,10 +103,10 @@ const App = () => {
                     alignItems: 'center', 
                     height: '100vh', 
                     width: '100%' 
-                    }}
+                  }}
       >
         <div style={{ position: 'absolute', left: 0, top: '5%', width: '15%', height: '400px' }}>
-          <MyMenu originalElements={originalElements} setElements={setElements} handleButtonClick={handleButtonClick} /> {/* Pass originalElements to MyMenu */}
+          <MyMenu originalElements={originalElements} setElements={setElements} search={search} handleButtonClick={handleButtonClick} handleSearchButton={handleSearchButton} /> {/* Pass originalElements to MyMenu */}
         </div>
         {showGraph ? 
             <MyGraph elements={elements}
@@ -118,12 +123,14 @@ const App = () => {
         }
         <ModalCard modalInfo={modalInfo} closeModal={closeModal} /> {/* 使用新的 ModalCard 组件 */}
       </div>
-      <InputArea 
-        handleButtonClick={handleButtonClick} 
-        handleSearch={handleSearch} 
-        loading={loading}
-        style={{ width: '200%' }} 
-      />
+      { search ? 
+        <InputArea 
+          handleButtonClick={handleButtonClick} 
+          handleSearch={handleSearch} 
+          loading={loading}
+          style={{ width: '200%' }} 
+        /> : null
+      } 
     </div>
   );
 };

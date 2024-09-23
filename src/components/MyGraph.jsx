@@ -55,7 +55,7 @@ const MyGraph = ({ elements, setModalInfo, marginRight, setMarginRight }) => {
           label: node.data('label'),
           content: node.data('content')
         });
-        setMarginRight(10);
+        setMarginRight(0);
       });
     }
   }, [setModalInfo, setMarginRight]);

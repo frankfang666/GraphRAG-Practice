@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { OrderedListOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import { OrderedListOutlined, NodeIndexOutlined, SearchOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 
-const MyMenu = ({ originalElements, setElements, handleButtonClick }) => {
+const MyMenu = ({ originalElements, setElements, handleButtonClick, search, handleSearchButton }) => {
   const [menuItems, setMenuItems] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
   useEffect(() => {
     const levels = new Set();
@@ -22,6 +23,15 @@ const MyMenu = ({ originalElements, setElements, handleButtonClick }) => {
   }, [originalElements]);
 
   const onClick = (e) => {
+    if (e.key === 'search') {
+      if (search) setSelectedKeys([]);
+      else setSelectedKeys([e.key]); // 取消高亮
+      handleSearchButton();
+      return;
+    }
+
+    setSelectedKeys([e.key]); // 设置高亮
+
     if (e.key === 'show-graph') {
       handleButtonClick();
       return;
@@ -49,11 +59,17 @@ const MyMenu = ({ originalElements, setElements, handleButtonClick }) => {
       onClick={onClick}
       style={{ width: '100%' }}
       mode="inline"
+      selectedKeys={selectedKeys} // 设置 selectedKeys
       items={[
         {
           key: 'show-graph',
           label: '显示图谱',
           icon: <NodeIndexOutlined />,
+        },
+        {
+            key: 'search',
+            label: '搜索',
+            icon: <SearchOutlined />,
         },
         {
           key: 'sub',

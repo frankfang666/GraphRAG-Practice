@@ -14,7 +14,7 @@ export default function ModalCard({ modalInfo, closeModal }) {
                 height: '75%', 
                 width: "20%", 
                 overflowY: 'auto', 
-                marginLeft: '67%', 
+                marginLeft: '78%', 
                 backgroundColor: '#f0f0f0', 
                 border: '1px solid lightgray' 
               }}
