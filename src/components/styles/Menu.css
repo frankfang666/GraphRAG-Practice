@@ -1,0 +1,23 @@
+.custom-menu {
+    background-color: #f5f7fa; /* Light background color */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .custom-menu .ant-menu-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px; /* Adjust height as needed */
+    margin: 5px 0; /* Space between items */
+  }
+  
+  .custom-menu .ant-menu-item.logo {
+    height: 80px; /* Custom height for logo */
+  }
+  
+  .custom-menu .ant-menu-item.avatar {
+    margin-top: auto; /* Push avatar to the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

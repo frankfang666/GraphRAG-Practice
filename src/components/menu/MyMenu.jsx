@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { OrderedListOutlined, NodeIndexOutlined, SearchOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 
-const MyMenu = ({ originalElements, setElements, handleButtonClick, search, handleSearchButton }) => {
+const MyMenu = ({ originalElements, setElements, handleButtonClick, search, handleSearchButton, setSelectedKeys, selectedKeys }) => {
   const [menuItems, setMenuItems] = useState([]);
-  const [selectedKeys, setSelectedKeys] = useState([]);
 
   useEffect(() => {
     const levels = new Set();

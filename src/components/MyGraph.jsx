@@ -73,7 +73,7 @@ const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, m
       layout={layout}
       style={{ 
         width: `${width}%`, 
-        height: `${90 - marginBottom-10}%`, 
+        height: `${90 - marginBottom - 10}%`, 
         border: '1px solid lightgray', 
         borderRadius: '10px', 
         marginTop: '0%', 

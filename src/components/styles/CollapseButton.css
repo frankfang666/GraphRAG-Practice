@@ -1,0 +1,18 @@
+.collapse-button {
+  position: absolute;
+  top: 35%;
+  right: -30px; /* Adjust this value as needed */
+  transform: translateY(-50%);
+  z-index: 1000;
+  background-color: transparent; /* Ensure background is transparent */
+  border: none; /* Remove border */
+}
+
+.collapse-button .anticon {
+  color: rgb(181, 179, 179); /* Default icon color */
+}
+
+.collapse-button:hover .anticon,
+.collapse-button:focus .anticon {
+  color: black; /* Change icon color on hover and focus */
+}

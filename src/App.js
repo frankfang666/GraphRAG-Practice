@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import MyGraph from './components/MyGraph';
-import MyMenu from './components/MyMenu';
 import ModalCard from './components/ModalCard';
 import SearchArea from './components/search/SearchArea';
+import './App.css'; // Import the CSS file
+import MyContext from './MyContext';
+import VerticalMenu from './components/search/VerticalMenu';
+import CollapseButton from './components/menu/CollapseButton'; // Import CollapseButton
 
 const App = () => {
   const [elements, setElements] = useState([]);
@@ -12,7 +15,8 @@ const App = () => {
   const [marginRight, setMarginRight] = useState(0);
   const [marginBottom, setMarginBottom] = useState(0);
   const [search, setSearch] = useState(false);
-
+  const [selectedKeys, setSelectedKeys] = useState([]); // Add selectedKeys state
+  const [collapsed, setCollapsed] = useState(false); // Add collapsed state
   const middleWidth = 55;
 
   const fetchData = async () => {
@@ -81,51 +85,44 @@ const App = () => {
     setModalInfo(null);
   };
 
+  const handleToggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
+
   return (
-    <div style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  justifyContent: 'center', 
-                  alignItems: 'center', 
-                  height: '100vh' 
-                }}
-    >
-      <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'row', 
-                    justifyContent: 'center', 
-                    alignItems: 'center', 
-                    height: '100vh', 
-                    width: '100%' 
-                  }}
-      >
-        <div style={{ position: 'absolute', left: 0, top: '5%', width: '15%', height: '400px' }}>
-          <MyMenu originalElements={originalElements} setElements={setElements} search={search} handleButtonClick={handleButtonClick} handleSearchButton={handleSearchButton} /> {/* Pass originalElements to MyMenu */}
+    <MyContext.Provider value={{ search, setSearch, setSelectedKeys }}>
+      <div className="app-container">
+        <div className="inner-container">
+          <div className="menu-container" style={{ width: collapsed ? 0 : 80 }}>
+            { collapsed ? null : <VerticalMenu originalElements={originalElements} 
+                          setElements={setElements} 
+                          search={search} 
+                          handleButtonClick={handleButtonClick} 
+                          handleSearchButton={handleSearchButton} 
+                          selectedKeys={selectedKeys} 
+                          setSelectedKeys={setSelectedKeys} 
+                          showGraph={showGraph} />}
+            <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
+          </div>
+          <div className="graph-container">
+            {showGraph ? 
+                <MyGraph elements={elements}
+                        setModalInfo={setModalInfo}
+                        width={middleWidth}
+                        marginRight={marginRight} 
+                        setMarginRight={setMarginRight}
+                        marginBottom={marginBottom}
+                        setMarginBottom={setMarginBottom}/> : 
+                        <div className="graph-placeholder" style={{ width: `${middleWidth}%`, height: `${90 - marginBottom - 10}%` }} />
+            }
+            <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={`${middleWidth}%`} /> {/* 使用新的 ModalCard 组件 */}
+          </div>
+          { search ? 
+            <SearchArea model={'qwen2:7b'}/> : null
+          } 
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}>
-          {showGraph ? 
-              <MyGraph elements={elements}
-                      setModalInfo={setModalInfo}
-                      width={middleWidth}
-                      marginRight={marginRight} 
-                      setMarginRight={setMarginRight}
-                      marginBottom={marginBottom}
-                      setMarginBottom={setMarginBottom}/> : 
-                      <div style={{ 
-                            width: `${middleWidth}%`, 
-                            height: '90%', 
-                            border: '1px solid lightgray', 
-                            borderRadius: '10px', 
-                            marginRight: marginRight  }}
-                      />
-          }
-          <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={`${middleWidth}%`} /> {/* 使用新的 ModalCard 组件 */}
-        </div>
-        { search ? 
-          <SearchArea model={'qwen2:7b'}/> : null
-        } 
       </div>
-    </div>
+    </MyContext.Provider>
   );
 };
 
