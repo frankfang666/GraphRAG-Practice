@@ -20,7 +20,7 @@ const props = {
 };
 const Uploader = () => (
   <Upload {...props}>
-    <Button icon={<UploadOutlined />}/>
+    <Button icon={<UploadOutlined />} type="text" style={{ height: '75%'}}/>
   </Upload>
 );
 export default Uploader;

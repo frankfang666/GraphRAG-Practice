@@ -7,8 +7,8 @@ export default function ModalCard({ modalInfo, closeModal, width }) {
     modalInfo && (
       <Card
         title="节点信息"
-        extra={<AntdButton onClick={closeModal} icon={<CloseOutlined />} style={{ backgroundColor: '#87CEEB', color: 'white', border: 'none', marginRight: '-15px' }} />}
-        headStyle={{ backgroundColor: '#87CEEB', color: 'white' }}
+        extra={<AntdButton onClick={closeModal} type="text" icon={<CloseOutlined />} style={{ backgroundColor: '#87CEEB', color: 'white', border: 'none', marginRight: '-15px' }} />}
+        styles={{ header: {backgroundColor: '#87CEEB', color: 'white' }}}
         style={{ 
                 position: 'absolute', 
                 height: '27%', 

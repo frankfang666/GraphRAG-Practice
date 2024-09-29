@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input } from "antd"; // Import Search from antd
 import DisplayArea from './DisplayArea';
-
+import Uploader from './Uploader';
 const { Search } = Input;
 
 export default function SearchArea({ model }) {
@@ -110,7 +110,8 @@ export default function SearchArea({ model }) {
                 value={querytxt}
                 onChange={handleAreaChange}
                 onSearch={handleSubmit}
-                style={{ width: componentWidth, height: '10%', marginTop: '2%' }}
+                suffix={<Uploader />}
+                style={{ width: componentWidth, height: '8%', marginTop: '2%' }}
             />
         </div>
     );

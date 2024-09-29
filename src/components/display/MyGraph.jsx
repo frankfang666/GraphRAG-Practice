@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 
-const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, marginBottom, setMarginBottom }) => {
+const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, marginBottom, setMarginBottom, highlightedNodes }) => {
   const cyRef = useRef(null);
 
   // Define the layout of the graph using useMemo
@@ -44,6 +44,21 @@ const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, m
         curveStyle: 'bezier',
       },
     },
+    {
+      selector: '.highlight', // Add this new class for highlighting
+      style: {
+        'background-color': 'yellow',
+        // 'line-color': '#61bffc',
+        // 'target-arrow-color': '#61bffc',
+        // 'transition-property': 'background-color, line-color, target-arrow-color',
+        'transition-duration': '0.5s',
+        'width': 70, // Increase node size
+        'height': 70,
+        'border-width': 5, // Add border
+        'border-color': '#ff0000',
+        'opacity': 0.8 // Change opacity
+      }
+    }
   ];
 
   useEffect(() => {
@@ -59,6 +74,19 @@ const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, m
       });
     }
   }, [setModalInfo, setMarginBottom]);
+
+  useEffect(() => {
+
+    // Remove highlight from previously highlighted nodes
+    cyRef.current.$('.highlight').removeClass('highlight');
+
+    // Add highlight to the new set of highlighted nodes
+    highlightedNodes.forEach(highlightedNode => {
+      const nid = highlightedNode.id;
+      cyRef.current.elements(`node[id = "${nid}"]`).addClass('highlight');
+
+    });
+  }, [highlightedNodes]);
 
   useEffect(() => {
     if (cyRef.current) {

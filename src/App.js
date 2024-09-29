@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import MyGraph from './components/MyGraph';
-import ModalCard from './components/ModalCard';
+import MyGraph from './components/display/MyGraph';
+import ModalCard from './components/display/ModalCard';
 import SearchArea from './components/search/SearchArea';
 import './App.css'; // Import the CSS file
 import MyContext from './MyContext';
-import VerticalMenu from './components/search/VerticalMenu';
+import VerticalMenu from './components/menu/VerticalMenu';
 import CollapseButton from './components/menu/CollapseButton'; // Import CollapseButton
+import NodeList from './components/display/NodeList';
 
 const App = () => {
   const [elements, setElements] = useState([]);
@@ -17,18 +18,24 @@ const App = () => {
   const [search, setSearch] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState([]); // Add selectedKeys state
   const [collapsed, setCollapsed] = useState(false); // Add collapsed state
+  const [highlightedNodes, setHighlightedNodes] = useState([]);
+  const [showNodeList, setShowNodeList] = useState(false);
+  const [nodeSearchInput, setNodeSearchInput] = useState('');
   const middleWidth = 55;
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:3002/api/graph/query');
+      const response = await fetch('http://localhost:8000/get_graph', {
+        mode: 'cors',
+        method: 'GET',
+      });
       const data = await response.json();
       const colors = ['blue', 'green', 'orange', 'pink'];
       
       let nodes = [], edges = [];
       const nodeIds = new Set();
 
-      data.forEach(element => {
+      data['response'].forEach(element => {
         const nodeId1 = element.m.properties.id, nodeId2 = element.n.properties.id;
         if (!nodeIds.has(nodeId1)) {
           nodes.push({ group: 'nodes', 
@@ -55,7 +62,7 @@ const App = () => {
           nodeIds.add(nodeId2);
         }
       });
-      data.forEach(element => {
+      data['response'].forEach(element => {
         const sourceId = element.n.properties.id;
         const targetId = element.m.properties.id;
         if (nodeIds.has(sourceId) && nodeIds.has(targetId)) {
@@ -97,11 +104,17 @@ const App = () => {
             { collapsed ? null : <VerticalMenu originalElements={originalElements} 
                           setElements={setElements} 
                           search={search} 
+                          setSearch={setSearch}
                           handleButtonClick={handleButtonClick} 
                           handleSearchButton={handleSearchButton} 
                           selectedKeys={selectedKeys} 
                           setSelectedKeys={setSelectedKeys} 
-                          showGraph={showGraph} />}
+                          showGraph={showGraph} 
+                          setHighlightedNodes={setHighlightedNodes}
+                          setShowNodeList={setShowNodeList}
+                          nodeSearchInput={nodeSearchInput}
+                          setNodeSearchInput={setNodeSearchInput}
+                          />}
             <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
           </div>
           <div className="graph-container">
@@ -112,13 +125,19 @@ const App = () => {
                         marginRight={marginRight} 
                         setMarginRight={setMarginRight}
                         marginBottom={marginBottom}
-                        setMarginBottom={setMarginBottom}/> : 
+                        setMarginBottom={setMarginBottom}
+                        highlightedNodes={highlightedNodes}/> : 
                         <div className="graph-placeholder" style={{ width: `${middleWidth}%`, height: `${90 - marginBottom - 10}%` }} />
             }
             <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={`${middleWidth}%`} /> {/* 使用新的 ModalCard 组件 */}
           </div>
-          { search ? 
-            <SearchArea model={'qwen2:7b'}/> : null
+          { (search && !showNodeList) ? 
+            <SearchArea model={'qwen2:7b'}/> : 
+            (!search && showNodeList) ? 
+            <NodeList highlightedNodes={highlightedNodes} 
+                      setHighlightedNodes={setHighlightedNodes} 
+                      setNodeSearchInput={setNodeSearchInput} 
+                      setShowNodeList={setShowNodeList} /> : null
           } 
         </div>
       </div>
