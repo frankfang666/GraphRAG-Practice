@@ -7,6 +7,7 @@ import MyContext from './MyContext';
 import VerticalMenu from './components/menu/VerticalMenu';
 import CollapseButton from './components/menu/CollapseButton'; // Import CollapseButton
 import NodeList from './components/display/NodeList';
+import { notification } from 'antd';
 
 const App = () => {
   const [elements, setElements] = useState([]);
@@ -73,6 +74,10 @@ const App = () => {
       setElements([...nodes, ...edges]);
       setOriginalElements([...nodes, ...edges]); // Update original elements
     } catch (error) {
+      notification.error({
+        message: '获取数据失败',
+        description: '请检查服务器是否正常运行',
+      });
       console.error('Error fetching data:', error);
     }
   };
