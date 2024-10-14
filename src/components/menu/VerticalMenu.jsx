@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, Avatar, notification, Tooltip, Modal, Input, Upload, message } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Menu, Avatar, notification, Tooltip, Modal, Input, message } from 'antd';
 import {
   OrderedListOutlined,
   NodeIndexOutlined,
@@ -21,6 +21,7 @@ const VerticalMenu = ({
     setHighlightedNodes,
     setShowNodeList,
     nodeSearchInput, setNodeSearchInput,
+    setFile,
   }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
@@ -29,6 +30,8 @@ const VerticalMenu = ({
   const [isSubModalVisible, setIsSubModalVisible] = useState(false);
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
+
+  const fileInputRef = useRef(null); // Create a ref for the file input element
 
   useEffect(() => {
     const levels = new Set();
@@ -74,6 +77,7 @@ const VerticalMenu = ({
 
     if (e.key === 'upload') {
       setSelectedKeys([]);
+      fileInputRef.current.click(); // Use ref to trigger the file input dialog
       return;
     }
   };
@@ -105,11 +109,14 @@ const VerticalMenu = ({
     setIsModalVisible(false);
   };
 
-  const handleUpload = (info) => {
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Handle the file upload logic here
+      message.success(`${file.name} file selected for upload`);
+      // Reset the input value to allow re-uploading the same file if needed
+      event.target.value = null;
+      setFile(file);
     }
   };
 
@@ -145,7 +152,7 @@ const VerticalMenu = ({
             key: 'show-graph',
             icon: (
               <Tooltip title="显示图谱">
-                <NodeIndexOutlined />
+                <NodeIndexOutlined  />
               </Tooltip>
             ),
           },
@@ -174,18 +181,14 @@ const VerticalMenu = ({
                 <UploadOutlined />
               </Tooltip>
             ),
-            style: { padding: '10px 15px 20px 15px' },
-            label: (
-              <Upload
-                name="file"
-                action="/upload" // Replace with your upload URL
-                onChange={handleUpload}
-                showUploadList={false} // Hide the default upload list
-              >
-              </Upload>
-            ),
           }
         ]}
+      />
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }} // Hide the file input
+        onChange={handleFileChange} // Handle file selection
       />
       <Modal title="节点搜索" open={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <Input value={nodeSearchInput} onChange={(e) => setNodeSearchInput(e.target.value)} placeholder="请输入搜索关键词" />

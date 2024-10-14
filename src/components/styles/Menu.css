@@ -5,7 +5,6 @@
 
 .custom-menu .ant-menu-item {
   display: flex;
-  justify-content: center;
   align-items: center;
   height: 50px; /* Adjust height as needed */
 }

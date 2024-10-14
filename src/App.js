@@ -22,6 +22,7 @@ const App = () => {
   const [nodeSearchInput, setNodeSearchInput] = useState('');
   const [database, setDatabase] = useState('test');
   const [limit, setLimit] = useState(10);
+  const [file, setFile] = useState(null);
   const model = 'qwen2:7b';
 
   const fetchData = async (database, limit) => {
@@ -112,12 +113,14 @@ const App = () => {
     setHighlightedNodes,
     setShowNodeList,
     nodeSearchInput, setNodeSearchInput,
+    setFile,
   };
 
   const content = (
     <div>
-      <p>{`当前数据库：${database}`}</p>
-      <p>{`当前模型：${model}`}</p>
+      <p>{`当前连接数据库：${database}`}</p>
+      <p>{`当前调用模型：${model}`}</p>
+      <p>{`当前使用文件：${file ? file.name : '无'}`}</p>
     </div>
   );
 
@@ -139,10 +142,15 @@ const App = () => {
             }
             <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={'55%'} />
           </div>
-          <div className="vertical-menu-overlay">
-            <VerticalMenu {...verticalMenuProps} />
-            <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
-          </div>
+          {collapsed ? 
+              <div>
+                <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} /> 
+              </div> : 
+              <div className="vertical-menu-overlay"> 
+                <VerticalMenu {...verticalMenuProps} />
+                <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
+              </div>
+          }
           <div className="overlay-container">
             <div className="overlay-content">
               { (search && !showNodeList) ? 
