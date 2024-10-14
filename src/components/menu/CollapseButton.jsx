@@ -9,6 +9,7 @@ const CollapseButton = ({ collapsed, onToggle }) => {
       type="text"
       icon={collapsed ? <RightOutlined /> : <LeftOutlined />}
       onClick={onToggle}
+      style={{left: collapsed ? '0px' : '60px', top: collapsed ? '44%' : '50%'}}
       className="collapse-button"
     />
   );

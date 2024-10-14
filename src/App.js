@@ -7,26 +7,27 @@ import MyContext from './MyContext';
 import VerticalMenu from './components/menu/VerticalMenu';
 import CollapseButton from './components/menu/CollapseButton'; // Import CollapseButton
 import NodeList from './components/display/NodeList';
-import { notification } from 'antd';
+import { notification, Popover, Button, Divider } from 'antd';
 
 const App = () => {
   const [elements, setElements] = useState([]);
   const [originalElements, setOriginalElements] = useState([]); // New state for original elements
   const [showGraph, setShowGraph] = useState(false);
   const [modalInfo, setModalInfo] = useState(null);
-  const [marginRight, setMarginRight] = useState(0);
-  const [marginBottom, setMarginBottom] = useState(0);
   const [search, setSearch] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState([]); // Add selectedKeys state
   const [collapsed, setCollapsed] = useState(false); // Add collapsed state
   const [highlightedNodes, setHighlightedNodes] = useState([]);
   const [showNodeList, setShowNodeList] = useState(false);
   const [nodeSearchInput, setNodeSearchInput] = useState('');
-  const middleWidth = 55;
+  const [database, setDatabase] = useState('test');
+  const [limit, setLimit] = useState(10);
+  const model = 'qwen2:7b';
 
-  const fetchData = async () => {
+  const fetchData = async (database, limit) => {
     try {
-      const response = await fetch('http://localhost:8000/get_graph', {
+      console.log(database, limit);
+      const response = await fetch(`http://localhost:8000/get_graph?database=${database}&limit=${limit}`, {
         mode: 'cors',
         method: 'GET',
       });
@@ -82,18 +83,16 @@ const App = () => {
     }
   };
 
-  const handleButtonClick = () => {
-    fetchData();
+  const handleButtonClick = (database, limit) => {
+    fetchData(database, limit);
     setShowGraph(true);
   };
   
   const handleSearchButton = () => {
     setSearch(!search);
-    setMarginRight(0);
   };
 
   const closeModal = () => {
-    setMarginBottom(0);
     setModalInfo(null);
   };
 
@@ -101,43 +100,55 @@ const App = () => {
     setCollapsed(!collapsed);
   };
 
+  const verticalMenuProps = {
+    originalElements,
+    setElements,
+    search, setSearch,
+    handleButtonClick,
+    database, setDatabase,
+    limit, setLimit,
+    handleSearchButton,
+    selectedKeys, setSelectedKeys,
+    showGraph,
+    setHighlightedNodes,
+    setShowNodeList,
+    nodeSearchInput, setNodeSearchInput,
+  };
+
+  const content = (
+    <div>
+      <p>{`当前数据库：${database}`}</p>
+      <p>{`当前模型：${model}`}</p>
+    </div>
+  );
+
   return (
     <MyContext.Provider value={{ search, setSearch, setSelectedKeys }}>
-      <div className="app-container">
+      <div className="app-container" style={{ position: 'relative' }}>
+        <Popover content={content} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
+            <Button type="text">显示当前信息</Button>
+        </Popover>
+        <Divider style={{position: 'absolute', top: 10, width: '100%'}}/>
         <div className="inner-container">
-          <div className="menu-container" style={{ width: collapsed ? 0 : 80 }}>
-            { collapsed ? null : <VerticalMenu originalElements={originalElements} 
-                          setElements={setElements} 
-                          search={search} 
-                          setSearch={setSearch}
-                          handleButtonClick={handleButtonClick} 
-                          handleSearchButton={handleSearchButton} 
-                          selectedKeys={selectedKeys} 
-                          setSelectedKeys={setSelectedKeys} 
-                          showGraph={showGraph} 
-                          setHighlightedNodes={setHighlightedNodes}
-                          setShowNodeList={setShowNodeList}
-                          nodeSearchInput={nodeSearchInput}
-                          setNodeSearchInput={setNodeSearchInput}
-                          />}
-            <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
-          </div>
           <div className="graph-container">
             {showGraph ? 
                 <MyGraph elements={elements}
                         setModalInfo={setModalInfo}
-                        width={middleWidth}
-                        marginRight={marginRight} 
-                        setMarginRight={setMarginRight}
-                        marginBottom={marginBottom}
-                        setMarginBottom={setMarginBottom}
-                        highlightedNodes={highlightedNodes}/> : 
-                        <div className="graph-placeholder" style={{ width: `${middleWidth}%`, height: `${90 - marginBottom - 10}%` }} />
+                        highlightedNodes={highlightedNodes}
+                    /> : 
+                    null
             }
-            <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={`${middleWidth}%`} /> {/* 使用新的 ModalCard 组件 */}
+            <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={'55%'} />
           </div>
+          {collapsed ? <div >
+                        <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} /> 
+                      </div> : 
+                      <div className="vertical-menu-overlay"> 
+                        <VerticalMenu {...verticalMenuProps} />
+                        <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
+                  </div>}
           { (search && !showNodeList) ? 
-            <SearchArea model={'qwen2:7b'}/> : 
+            <SearchArea model={model} style={{position: 'absolute', width: '100%', height: '100%'}}/> : 
             (!search && showNodeList) ? 
             <NodeList highlightedNodes={highlightedNodes} 
                       setHighlightedNodes={setHighlightedNodes} 

@@ -67,8 +67,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   width: 100%;
+}
+
+.graph {
+  width: 100%;
+  height: 100%;
 }
 
 .graph-placeholder {
@@ -76,4 +81,15 @@
   border: 1px solid lightgray;
   border-radius: 10px;
   margin-right: 0;
+}
+
+.vertical-menu-overlay {
+  position: absolute; /* Position it absolutely within its parent */
+  z-index: 10; /* Ensure it is above other elements */
+  width: 60px; /* Set the width as needed */
+  top: 0; /* Align to the top */
+  left: 1%; /* Align to the left */
+  margin-top: 15%;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: semi-transparent background */
 }

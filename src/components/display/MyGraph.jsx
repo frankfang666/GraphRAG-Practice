@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 
-const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, marginBottom, setMarginBottom, highlightedNodes }) => {
+const MyGraph = ({ elements, setModalInfo, highlightedNodes }) => {
   const cyRef = useRef(null);
 
   // Define the layout of the graph using useMemo
@@ -70,10 +70,9 @@ const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, m
           label: node.data('label'),
           content: node.data('content')
         });
-        setMarginBottom(15);
       });
     }
-  }, [setModalInfo, setMarginBottom]);
+  }, [setModalInfo]);
 
   useEffect(() => {
 
@@ -100,13 +99,13 @@ const MyGraph = ({ elements, setModalInfo, width, marginRight, setMarginRight, m
       elements={elements}
       layout={layout}
       style={{ 
-        width: `${width}%`, 
-        height: `${90 - marginBottom - 10}%`, 
-        border: '1px solid lightgray', 
-        borderRadius: '10px', 
-        marginTop: '0%', 
-        marginRight: `${marginRight}%`, 
-        marginBottom: `${marginBottom}%` 
+        width: '100%', 
+        height: '100%', 
+        border: 'none', // Remove border if you want it to fill the entire page
+        borderRadius: '0', // Remove border radius
+        marginTop: '0', 
+        marginRight: '0', 
+        marginBottom: '0' 
       }}
       stylesheet={stylesheet}
     />

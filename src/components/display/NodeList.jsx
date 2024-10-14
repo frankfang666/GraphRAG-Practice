@@ -12,7 +12,7 @@ const NodeList = ({highlightedNodes, setHighlightedNodes, setNodeSearchInput, se
 
   return (
     visible && (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '25%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
             <Button
               type="text"
               icon={<CloseOutlined />}
