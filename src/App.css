@@ -93,3 +93,18 @@
   border-radius: 15px;
   background-color: rgba(255, 255, 255, 0.8); /* Optional: semi-transparent background */
 }
+
+.overlay-container {
+  position: absolute; /* Position it absolutely within its parent */
+  z-index: 20; /* Ensure it is above other elements, including the VerticalMenu */
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  pointer-events: none; /* Allow clicks to pass through if needed */
+}
+
+.overlay-content {
+  pointer-events: auto; /* Enable interaction with the content */
+  height: 100%;
+}

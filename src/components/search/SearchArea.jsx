@@ -84,8 +84,8 @@ export default function SearchArea({ model }) {
                     flexDirection: 'column', 
                     justifyContent: 'center', 
                     alignItems: 'center', 
-                    height: '100vh',
-                    width: '50%'  // 调整宽度
+                    height: '100%',
+                    width: '100%'  // 调整宽度
                 }}
         >
             <DisplayArea 

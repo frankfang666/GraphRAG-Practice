@@ -26,7 +26,6 @@ const App = () => {
 
   const fetchData = async (database, limit) => {
     try {
-      console.log(database, limit);
       const response = await fetch(`http://localhost:8000/get_graph?database=${database}&limit=${limit}`, {
         mode: 'cors',
         method: 'GET',
@@ -130,7 +129,7 @@ const App = () => {
         </Popover>
         <Divider style={{position: 'absolute', top: 10, width: '100%'}}/>
         <div className="inner-container">
-          <div className="graph-container">
+          <div className="graph-container" style={{ position: 'relative' }}>
             {showGraph ? 
                 <MyGraph elements={elements}
                         setModalInfo={setModalInfo}
@@ -140,21 +139,22 @@ const App = () => {
             }
             <ModalCard modalInfo={modalInfo} closeModal={closeModal} width={'55%'} />
           </div>
-          {collapsed ? <div >
-                        <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} /> 
-                      </div> : 
-                      <div className="vertical-menu-overlay"> 
-                        <VerticalMenu {...verticalMenuProps} />
-                        <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
-                  </div>}
-          { (search && !showNodeList) ? 
-            <SearchArea model={model} style={{position: 'absolute', width: '100%', height: '100%'}}/> : 
-            (!search && showNodeList) ? 
-            <NodeList highlightedNodes={highlightedNodes} 
-                      setHighlightedNodes={setHighlightedNodes} 
-                      setNodeSearchInput={setNodeSearchInput} 
-                      setShowNodeList={setShowNodeList} /> : null
-          } 
+          <div className="vertical-menu-overlay">
+            <VerticalMenu {...verticalMenuProps} />
+            <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
+          </div>
+          <div className="overlay-container">
+            <div className="overlay-content">
+              { (search && !showNodeList) ? 
+                <SearchArea model={model} style={{position: 'absolute', height: '100%'}}/> : 
+                (!search && showNodeList) ? 
+                <NodeList highlightedNodes={highlightedNodes} 
+                          setHighlightedNodes={setHighlightedNodes} 
+                          setNodeSearchInput={setNodeSearchInput} 
+                          setShowNodeList={setShowNodeList} /> : null
+              }
+            </div>
+          </div>
         </div>
       </div>
     </MyContext.Provider>

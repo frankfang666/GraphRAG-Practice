@@ -9,23 +9,18 @@ import {
 import '../styles/Menu.css'; // Import CSS for additional styling
 
 const VerticalMenu = ({ 
-    originalElements, 
-    setElements, 
-    handleButtonClick, 
-    database,
-    setDatabase,
-    limit,
-    setLimit,
-    search, 
-    setSearch, 
-    handleSearchButton, 
-    setSelectedKeys, 
-    selectedKeys, 
-    showGraph, 
-    setHighlightedNodes, 
-    setShowNodeList, 
-    nodeSearchInput, 
-    setNodeSearchInput 
+    originalElements,
+    setElements,
+    search, setSearch,
+    handleButtonClick,
+    database, setDatabase,
+    limit, setLimit,
+    handleSearchButton,
+    selectedKeys, setSelectedKeys,
+    showGraph,
+    setHighlightedNodes,
+    setShowNodeList,
+    nodeSearchInput, setNodeSearchInput,
   }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
@@ -197,6 +192,7 @@ const VerticalMenu = ({
       </Modal>
       <Modal title="信息搜索" open={isSearchModalVisible} onOk={() => setIsSearchModalVisible(false)} onCancel={() => setIsSearchModalVisible(false)}>
         <Menu
+          selectedKeys={selectedKeys}
           items={[
             {
               key: 'ragsearch',
@@ -207,7 +203,7 @@ const VerticalMenu = ({
                   setSelectedKeys([]); // 仅取消当前的key
                   setSearch(false);
                 } else {
-                  setSelectedKeys([]); 
+                  setSelectedKeys(['ragsearch']); 
                   setSearch(true);
                 }
                 handleSearchButton();
