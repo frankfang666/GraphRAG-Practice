@@ -8,7 +8,7 @@ import LoginPage from './pages/LoginPage';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/graph" element={<GraphPage />} />

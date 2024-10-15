@@ -2,24 +2,21 @@ import React, { useState } from 'react';
 import MyGraph from '../components/display/MyGraph';
 import ModalCard from '../components/display/ModalCard';
 import SearchArea from '../components/search/SearchArea';
-import './GraphPage.css';
+import './GraphPage.css'; // Import the CSS file
 import MyContext from '../MyContext';
 import VerticalMenu from '../components/menu/VerticalMenu';
-import CollapseButton from '../components/menu/CollapseButton'; // Import CollapseButton
+import CollapseButton from '../components/menu/CollapseButton';
 import NodeList from '../components/display/NodeList';
 import { notification, Popover, Button, Divider } from 'antd';
-import { useNavigate } from 'react-router-dom'; // 引入 useNavigate
-import { LogoutOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
 
 const GraphPage = () => {
   const [elements, setElements] = useState([]);
-  const [originalElements, setOriginalElements] = useState([]); // New state for original elements
+  const [originalElements, setOriginalElements] = useState([]);
   const [showGraph, setShowGraph] = useState(false);
   const [modalInfo, setModalInfo] = useState(null);
   const [search, setSearch] = useState(false);
-  const [selectedKeys, setSelectedKeys] = useState([]); // Add selectedKeys state
-  const [collapsed, setCollapsed] = useState(false); // Add collapsed state
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [collapsed, setCollapsed] = useState(false);
   const [highlightedNodes, setHighlightedNodes] = useState([]);
   const [showNodeList, setShowNodeList] = useState(false);
   const [nodeSearchInput, setNodeSearchInput] = useState('');
@@ -27,7 +24,6 @@ const GraphPage = () => {
   const [limit, setLimit] = useState(10);
   const [file, setFile] = useState(null);
   const model = 'qwen2:7b';
-  const navigate = useNavigate(); // 使用 useNavigate 钩子
 
   const fetchData = async (database, limit) => {
     try {
@@ -77,20 +73,19 @@ const GraphPage = () => {
       });
 
       setElements([...nodes, ...edges]);
-      setOriginalElements([...nodes, ...edges]); // Update original elements
-      setShowGraph(true);
+      setOriginalElements([...nodes, ...edges]);
     } catch (error) {
       notification.error({
         message: '获取数据失败',
-        description: '请检查输入是否正确以及服务器是否正常运行',
+        description: '请检查服务器是否正常运行',
       });
-      setSelectedKeys([]);
       console.error('Error fetching data:', error);
     }
   };
 
   const handleButtonClick = (database, limit) => {
     fetchData(database, limit);
+    setShowGraph(true);
   };
   
   const handleSearchButton = () => {
@@ -129,20 +124,8 @@ const GraphPage = () => {
     </div>
   );
 
-  const handleLogout = () => {
-    navigate('/login'); // 返回登录页面
-  };
-
   return (
     <MyContext.Provider value={{ search, setSearch, setSelectedKeys }}>
-        <Tooltip title="退出登录">
-            <Button 
-                type="text" 
-                onClick={handleLogout} 
-                icon={<LogoutOutlined />}
-                style={{ position: 'absolute', top: 0, left: 20, zIndex: 1000 }}
-            />
-        </Tooltip>
       <div className="app-container" style={{ position: 'relative' }}>
         <Popover content={content} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
             <Button type="text">显示当前信息</Button>
