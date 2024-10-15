@@ -113,7 +113,7 @@ const VerticalMenu = ({
     const file = event.target.files[0];
     if (file) {
       // Handle the file upload logic here
-      message.success(`${file.name} file selected for upload`);
+      message.success(`${file.name}文件上传成功`);
       // Reset the input value to allow re-uploading the same file if needed
       event.target.value = null;
       setFile(file);
@@ -130,6 +130,7 @@ const VerticalMenu = ({
   };
 
   const handleGraphModalCancel = () => {
+    setSelectedKeys([]);
     setIsGraphModalVisible(false);
   };
 
@@ -219,6 +220,7 @@ const VerticalMenu = ({
               label: '节点搜索',
               onClick: () => {
                 setIsSearchModalVisible(false);
+                console.log(showGraph);
                 if (!showGraph) {
                   notification.warning({
                     message: '提示',
