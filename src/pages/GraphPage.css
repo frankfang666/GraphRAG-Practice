@@ -1,0 +1,72 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .inner-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+  }
+  
+  .menu-container {
+    position: absolute;
+    left: 1%;
+    top: 25%;
+    width: 15%;
+    height: 400px;
+  }
+  
+  .graph-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .graph {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .graph-placeholder {
+    height: 90%;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin-right: 0;
+  }
+  
+  .vertical-menu-overlay {
+    position: absolute; /* Position it absolutely within its parent */
+    z-index: 10; /* Ensure it is above other elements */
+    width: 60px; /* Set the width as needed */
+    top: 0; /* Align to the top */
+    left: 1%; /* Align to the left */
+    margin-top: 15%;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: semi-transparent background */
+  }
+  
+  .overlay-container {
+    position: absolute; /* Position it absolutely within its parent */
+    z-index: 20; /* Ensure it is above other elements, including the VerticalMenu */
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through if needed */
+  }
+  
+  .overlay-content {
+    pointer-events: auto; /* Enable interaction with the content */
+    height: 100%;
+  }
+  
