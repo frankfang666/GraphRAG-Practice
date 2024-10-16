@@ -8,6 +8,8 @@ import VerticalMenu from '../components/menu/VerticalMenu';
 import CollapseButton from '../components/menu/CollapseButton';
 import NodeList from '../components/display/NodeList';
 import { notification, Popover, Button, Divider } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { LoginOutlined } from '@ant-design/icons';
 
 const GraphPage = () => {
   const [elements, setElements] = useState([]);
@@ -24,6 +26,7 @@ const GraphPage = () => {
   const [limit, setLimit] = useState(10);
   const [file, setFile] = useState(null);
   const model = 'qwen2:7b';
+  const navigate = useNavigate();
 
   const fetchData = async (database, limit) => {
     try {
@@ -126,6 +129,9 @@ const GraphPage = () => {
 
   return (
     <MyContext.Provider value={{ search, setSearch, setSelectedKeys }}>
+      <Button icon={<LoginOutlined />} type="text" style={{position: 'absolute', top: 0, left: 20, zIndex: 1000}} onClick={() => {
+        navigate('/login');
+      }} />
       <div className="app-container" style={{ position: 'relative' }}>
         <Popover content={content} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
             <Button type="text">显示当前信息</Button>
