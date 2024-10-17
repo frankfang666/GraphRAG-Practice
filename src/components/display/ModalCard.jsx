@@ -17,7 +17,8 @@ export default function ModalCard({ modalInfo, closeModal, width }) {
                 marginTop: '39%', 
                 marginLeft: '0%', 
                 backgroundColor: '#f0f0f0', 
-                border: '1px solid lightgray' 
+                border: '1px solid lightgray',
+                zIndex: 1000
               }}
       >
         <p>{modalInfo.label}</p>

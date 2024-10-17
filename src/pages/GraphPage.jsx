@@ -22,7 +22,7 @@ const GraphPage = () => {
   const [highlightedNodes, setHighlightedNodes] = useState([]);
   const [showNodeList, setShowNodeList] = useState(false);
   const [nodeSearchInput, setNodeSearchInput] = useState('');
-  const [database, setDatabase] = useState('test');
+  const [database, setDatabase] = useState(null);
   const [limit, setLimit] = useState(10);
   const [file, setFile] = useState(null);
   const model = 'qwen2:7b';
@@ -121,7 +121,7 @@ const GraphPage = () => {
 
   const content = (
     <div>
-      <p>{`当前连接数据库：${database}`}</p>
+      <p>{`当前连接数据库：${database ? database : '无'}`}</p>
       <p>{`当前调用模型：${model}`}</p>
       <p>{`当前使用文件：${file ? file.name : '无'}`}</p>
     </div>

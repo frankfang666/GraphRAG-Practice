@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Menu, Avatar, notification, Tooltip, Modal, Input, message } from 'antd';
+import { Menu, Avatar, notification, Tooltip, Modal, Input, Select, message } from 'antd';
 import {
   OrderedListOutlined,
   NodeIndexOutlined,
@@ -7,6 +7,8 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import '../styles/Menu.css'; // Import CSS for additional styling
+
+const { Option } = Select; // Destructure Option from Select
 
 const VerticalMenu = ({ 
     originalElements,
@@ -28,10 +30,29 @@ const VerticalMenu = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [isSubModalVisible, setIsSubModalVisible] = useState(false);
+  const [dblist, setDbList] = useState([]);
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
 
   const fileInputRef = useRef(null); // Create a ref for the file input element
+
+  useEffect(() => {
+    const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/list_databases', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      setDbList(data['databases']);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();  
+  }, []);
 
   useEffect(() => {
     const levels = new Set();
@@ -268,17 +289,28 @@ const VerticalMenu = ({
         onOk={handleGraphModalOk}
         onCancel={handleGraphModalCancel}
       >
-        <Input
-          placeholder="输入数据库名"
-          value={input1}
-          onChange={(e) => setInput1(e.target.value)}
-          style={{ marginBottom: '10px' }}
-        />
-        <Input
-          placeholder="输入获取的关系数量"
-          value={input2}
-          onChange={(e) => setInput2(e.target.value)}
-        />
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+          <span style={{ marginRight: '10px', minWidth: '100px' }}>数据库名:</span>
+          <Select
+            placeholder="选择数据库名"
+            onChange={(value) => setInput1(value)}
+            style={{ flex: 1 }}
+          >
+            {dblist.map((db) => (
+              <Option key={db} value={db}>{db}</Option>
+            ))}
+          </Select>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ marginRight: '10px', minWidth: '100px' }}>关系数量:</span>
+          <Input
+            placeholder="输入获取的关系数量"
+            value={input2}
+            onChange={(e) => setInput2(e.target.value)}
+            style={{ flex: 1 }}
+          />
+        </div>
       </Modal>
     </>
   );
