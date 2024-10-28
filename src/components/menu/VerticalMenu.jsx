@@ -160,7 +160,7 @@ const VerticalMenu = ({
       <Menu
         mode="vertical"
         theme="light"
-        style={{ borderRadius: '15px'}}
+        style={{ borderRadius: '15px', boxShadow: '0px 5px 10px lightgray'}}
         className="custom-menu"
         onClick={onClick}
         selectedKeys={selectedKeys} // 设置 selectedKeys
