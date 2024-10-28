@@ -1,7 +1,10 @@
-import { useState } from "react";
-import { Input } from "antd"; // Import Search from antd
+import { useState, useContext } from "react";
+import { Input, Button } from "antd"; // Import Search from antd
 import DisplayArea from './DisplayArea';
 import Uploader from './Uploader';
+import MyContext from '../../MyContext';
+import { CloseOutlined } from '@ant-design/icons';
+
 const { Search } = Input;
 
 export default function SearchArea({ model }) {
@@ -10,6 +13,7 @@ export default function SearchArea({ model }) {
     const [toScroll, setToScroll] = useState(false);
     const [loading, setLoading] = useState(false);
     const componentWidth = '100%';
+    const { setSearch, setSelectedKeys } = useContext(MyContext);
 
     const handleAreaChange = (e) => {
         setquerytxt(e.target.value);
@@ -88,6 +92,7 @@ export default function SearchArea({ model }) {
                     width: '100%'  // 调整宽度
                 }}
         >
+            <Button type="text" icon={<CloseOutlined />} onClick={() => {setSearch(false); setSelectedKeys([])}} style={{position: 'absolute', top: 0, right: 0, zIndex: 1000}} />
             <DisplayArea 
                 displaytxts={displaytxts} 
                 toScroll={toScroll} 

@@ -7,7 +7,7 @@ import MyContext from '../MyContext';
 import VerticalMenu from '../components/menu/VerticalMenu';
 import CollapseButton from '../components/menu/CollapseButton';
 import NodeList from '../components/display/NodeList';
-import { notification, Popover, Button, Divider } from 'antd';
+import { notification, Popover, Button, Divider, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { LoginOutlined } from '@ant-design/icons';
 
@@ -123,15 +123,26 @@ const GraphPage = () => {
     <div>
       <p>{`当前连接数据库：${database ? database : '无'}`}</p>
       <p>{`当前调用模型：${model}`}</p>
-      <p>{`当前使用文件：${file ? file.name : '无'}`}</p>
+      <p>
+        当前使用文件：
+        {file ? (
+          <a href={file.url} target="_blank" rel="noopener noreferrer">
+            {file.name}
+          </a>
+        ) : (
+          '无'
+        )}
+      </p>
     </div>
   );
 
   return (
     <MyContext.Provider value={{ search, setSearch, setSelectedKeys }}>
-      <Button icon={<LoginOutlined />} type="text" style={{position: 'absolute', top: 0, left: 20, zIndex: 1000}} onClick={() => {
-        navigate('/login');
-      }} />
+      <Tooltip title="退出登录">
+        <Button icon={<LoginOutlined />} type="text" style={{position: 'absolute', top: 0, left: 20, zIndex: 1000}} onClick={() => {
+          navigate('/login');
+        }} />
+      </Tooltip>
       <div className="app-container" style={{ position: 'relative' }}>
         <Popover content={content} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
             <Button type="text">显示当前信息</Button>

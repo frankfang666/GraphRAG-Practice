@@ -1,15 +1,13 @@
-import {useEffect, useRef, useState, useContext} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import ReactMarkdown from 'react-markdown'
-import { CopyOutlined, CloseOutlined } from '@ant-design/icons'
-import { Tooltip, Button } from 'antd' // 引入 Tooltip 组件
+import { CopyOutlined } from '@ant-design/icons'
+import { Tooltip } from 'antd' // 引入 Tooltip 组件
 import '../styles/DisplayArea.css';
-import MyContext from '../../MyContext';
 
 export default function DisplayArea({ displaytxts, toScroll, setToScroll, componentWidth, style }) {
     const scrollableDivRef = useRef(null)
     const [showPopup, setShowPopup] = useState(false)
     const [hoveredIndex, setHoveredIndex] = useState(null) // 用于跟踪悬停的气泡索引
-    const { setSearch, setSelectedKeys } = useContext(MyContext);
 
     useEffect(()=>{
             scrollableDivRef.current.scrollTop = scrollableDivRef.current.scrollHeight
@@ -37,7 +35,6 @@ export default function DisplayArea({ displaytxts, toScroll, setToScroll, compon
                     内容已复制到剪贴板
                 </div>
             )}
-            <Button className="close-button" type="text" icon={<CloseOutlined />} onClick={() => {setSearch(false); setSelectedKeys([])}} />
             {
                 displaytxts.map((x, i) => {
                     return (

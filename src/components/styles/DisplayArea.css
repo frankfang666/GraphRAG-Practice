@@ -11,14 +11,6 @@
     z-index: 1000;
 }
 
-.close-button {
-    position: relative;
-    top: 10px;
-    left: 92%;
-    background-color: transparent;
-    border: none;
-}
-
 .message-list {
     list-style-type: none;
     padding: 0;
