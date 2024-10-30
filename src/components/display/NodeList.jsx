@@ -25,7 +25,7 @@ const NodeList = ({highlightedNodes, setHighlightedNodes, setNodeSearchInput, se
                     renderItem={(item) => (
                         <List.Item>
                             <List.Item.Meta
-                                title={`章节：${item.title}`}
+                                title={`实体：${item.title}`}
                                 description={item.description} />
                         </List.Item>
                     )} />

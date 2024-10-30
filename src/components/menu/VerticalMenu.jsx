@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Menu, Avatar, notification, Tooltip, Modal, Input, Select, message } from 'antd';
 import {
-  OrderedListOutlined,
   NodeIndexOutlined,
   SearchOutlined,
   UploadOutlined,
@@ -11,8 +10,6 @@ import '../styles/Menu.css'; // Import CSS for additional styling
 const { Option } = Select; // Destructure Option from Select
 
 const VerticalMenu = ({ 
-    originalElements,
-    setElements,
     search, setSearch,
     handleButtonClick,
     database, setDatabase,
@@ -25,11 +22,9 @@ const VerticalMenu = ({
     nodeSearchInput, setNodeSearchInput,
     setFile,
   }) => {
-  const [menuItems, setMenuItems] = useState([]);
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-  const [isSubModalVisible, setIsSubModalVisible] = useState(false);
   const [dblist, setDbList] = useState([]);
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
@@ -54,38 +49,10 @@ const VerticalMenu = ({
     fetchData();  
   }, []);
 
-  useEffect(() => {
-    const levels = new Set();
-    originalElements.forEach(element => {
-      if (element.data && element.data.level !== undefined) {
-        levels.add(element.data.level);
-      }
-    });
-
-    const items = Array.from(levels).sort().map(level => ({
-      key: `level-${level}`,
-      label: `第${level}层`,
-    }));
-
-    setMenuItems(items);
-  }, [originalElements]);
-
   const onClick = (e) => {
     console.log(selectedKeys);
     if (e.key === 'search') {
       setIsSearchModalVisible(true);
-      return;
-    }
-  
-    if (e.key === 'sub') {
-      if (!showGraph) {
-        notification.warning({
-          message: '提示',
-          description: '请先点击显示图表按钮',
-        });
-        return;
-      }
-      setIsSubModalVisible(true);
       return;
     }
   
@@ -110,7 +77,7 @@ const VerticalMenu = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ keyword: nodeSearchInput }), // Send input value in the request body
+        body: JSON.stringify({ database: database, keyword: nodeSearchInput }), // Send input value in the request body
       });
 
       if (!response.ok) {
@@ -188,15 +155,6 @@ const VerticalMenu = ({
             // Remove children and handle click to show modal
           },
           {
-            key: 'sub',
-            icon: (
-              <Tooltip title="层级展示">
-                <OrderedListOutlined />
-              </Tooltip>
-            ),
-            // Remove children and handle click to show modal
-          },
-          {
             key: 'upload',
             icon: (
               <Tooltip title="上传文件">
@@ -256,31 +214,6 @@ const VerticalMenu = ({
               },
             },
           ]}
-        />
-      </Modal>
-      <Modal title="层级展示" open={isSubModalVisible} onOk={() => setIsSubModalVisible(false)} onCancel={() => setIsSubModalVisible(false)}>
-        <Menu
-          items={menuItems.map(item => ({
-            ...item,
-            onClick: (e) => {
-              setIsSubModalVisible(false);
-              const level = parseInt(e.key.split('-')[1], 10);
-    
-              // Filter nodes based on the selected level
-              const filteredNodes = originalElements.filter(element => {
-                return element.group === 'nodes' && (element.data.level === undefined || element.data.level >= level);
-              });
-
-              const nodeIds = new Set(filteredNodes.map(node => node.data.id));
-              
-              // Filter edges that connect the filtered nodes
-              const filteredEdges = originalElements.filter(element => {
-                return element.group === 'edges' && nodeIds.has(element.data.source) && nodeIds.has(element.data.target);
-              });
-
-              setElements([...filteredNodes, ...filteredEdges]);
-            },
-          }))}
         />
       </Modal>
       <Modal

@@ -13,7 +13,7 @@ export default function SearchArea({ model }) {
     const [toScroll, setToScroll] = useState(false);
     const [loading, setLoading] = useState(false);
     const componentWidth = '100%';
-    const { setSearch, setSelectedKeys } = useContext(MyContext);
+    const { setSearch, setSelectedKeys, database } = useContext(MyContext);
 
     const handleAreaChange = (e) => {
         setquerytxt(e.target.value);
@@ -28,18 +28,18 @@ export default function SearchArea({ model }) {
                 setToScroll(true);
                 setLoading(true);
 
-                // const res = await fetch(`http://127.0.0.1:3001/query?query=${encodeURIComponent(value)}`, { method: "GET" });
-                const res = await fetch('http://localhost:11434/api/chat', {
+                const res = await fetch('http://localhost:8000/query', {
                     method: 'POST',
+                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        model: model,
-                        messages: appendedDisplay,
-                        stream: true
+                        "query": value,
+                        "database": database,
                     }),
                 });
+
 
                 if (!res.ok) {
                     const errorMessage = await res.text();
@@ -57,15 +57,7 @@ export default function SearchArea({ model }) {
                     }
 
                     const chunk = decoder.decode(value, { stream: true });
-                    console.log(chunk);
-                    try {
-                        const chunk_objs = chunk.match(/{[^{}]*}/g).map(json => JSON.parse(json));
-                        for (const chunk_obj of chunk_objs) {
-                            text_stream += chunk_obj.content
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
+                    text_stream += chunk;
 
                     setdisplaytxts([...appendedDisplay, { "role": "assistant", "content": text_stream }]);
 

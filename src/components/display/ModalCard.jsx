@@ -6,7 +6,7 @@ export default function ModalCard({ modalInfo, closeModal, width }) {
   return (
     modalInfo && (
       <Card
-        title="节点信息"
+        title={modalInfo.type === 'node' ? "实体信息" : "关系信息"}
         extra={<AntdButton onClick={closeModal} type="text" icon={<CloseOutlined />} style={{ backgroundColor: '#87CEEB', color: 'white', border: 'none', marginRight: '-15px' }} />}
         styles={{ header: {backgroundColor: '#87CEEB', color: 'white' }}}
         style={{ 

@@ -27,7 +27,7 @@ const MyGraph = ({ elements, setModalInfo, highlightedNodes }) => {
         label: 'data(id)',
         width: 50,
         height: 50,
-        backgroundColor: 'data(color)',
+        backgroundColor: 'lightblue',
         color: '#fff',
         textHalign: 'center',
         textValign: 'center',
@@ -68,9 +68,20 @@ const MyGraph = ({ elements, setModalInfo, highlightedNodes }) => {
         setModalInfo({
           id: node.id(),
           label: node.data('label'),
-          content: node.data('content')
+          content: node.data('content'),
+          type: 'node'
         });
       });
+      // New edge click event
+    cyRef.current.on('tap', 'edge', (event) => {
+      const edge = event.target;
+      setModalInfo({
+        id: edge.id(),
+        label: edge.data('label'),
+        content: edge.data('content'),
+        type: 'edge'
+      });
+    });
     }
   }, [setModalInfo]);
 

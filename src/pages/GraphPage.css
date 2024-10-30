@@ -57,7 +57,6 @@
   
   .overlay-container {
     position: absolute; /* Position it absolutely within its parent */
-    z-index: 20; /* Ensure it is above other elements, including the VerticalMenu */
     top: 0;
     right: 0;
     width: 30%;

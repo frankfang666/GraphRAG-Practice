@@ -13,7 +13,6 @@ import { LoginOutlined } from '@ant-design/icons';
 
 const GraphPage = () => {
   const [elements, setElements] = useState([]);
-  const [originalElements, setOriginalElements] = useState([]);
   const [showGraph, setShowGraph] = useState(false);
   const [modalInfo, setModalInfo] = useState(null);
   const [search, setSearch] = useState(false);
@@ -30,26 +29,23 @@ const GraphPage = () => {
 
   const fetchData = async (database, limit) => {
     try {
-      const response = await fetch(`http://localhost:8000/get_graph?database=${database}&limit=${limit}`, {
+      const response = await fetch(`http://localhost:8000/get_graph/${database}?limit=${limit}`, {
         mode: 'cors',
         method: 'GET',
       });
       const data = await response.json();
-      const colors = ['blue', 'green', 'orange', 'pink'];
+      console.log(data);
       
       let nodes = [], edges = [];
       const nodeIds = new Set();
 
       data['response'].forEach(element => {
-        const nodeId1 = element.m.properties.id, nodeId2 = element.n.properties.id;
+        const nodeId1 = element.m.id, nodeId2 = element.n.id;
         if (!nodeIds.has(nodeId1)) {
           nodes.push({ group: 'nodes', 
                        data: { 
                                 id: nodeId1, 
-                                label: element.m.properties.name, 
-                                color: colors[element.m.properties.level], 
-                                content: element.m.properties.content, 
-                                level: element.m.properties.level 
+                                label: element.m.properties.id, 
                               }
                       });
           nodeIds.add(nodeId1);
@@ -58,25 +54,21 @@ const GraphPage = () => {
           nodes.push({ group: 'nodes', 
                        data: { 
                                 id: nodeId2, 
-                                label: element.n.properties.name, 
-                                color: colors[element.n.properties.level], 
-                                content: element.n.properties.content, 
-                                level: element.n.properties.level 
+                                label: element.n.properties.id,
                               }
                       });
           nodeIds.add(nodeId2);
         }
       });
       data['response'].forEach(element => {
-        const sourceId = element.n.properties.id;
-        const targetId = element.m.properties.id;
+        const sourceId = element.n.id;
+        const targetId = element.m.id;
         if (nodeIds.has(sourceId) && nodeIds.has(targetId)) {
-          edges.push({ group: 'edges', data: { source: sourceId, target: targetId, label: 'relates' }});
+          edges.push({ group: 'edges', data: { source: sourceId, target: targetId, label: element.r.relationshipType }});
         }
       });
 
       setElements([...nodes, ...edges]);
-      setOriginalElements([...nodes, ...edges]);
     } catch (error) {
       notification.error({
         message: '获取数据失败',
@@ -104,8 +96,6 @@ const GraphPage = () => {
   };
 
   const verticalMenuProps = {
-    originalElements,
-    setElements,
     search, setSearch,
     handleButtonClick,
     database, setDatabase,
@@ -137,7 +127,7 @@ const GraphPage = () => {
   );
 
   return (
-    <MyContext.Provider value={{ search, setSearch, setSelectedKeys }}>
+    <MyContext.Provider value={{ search, setSearch, setSelectedKeys, database }}>
       <Tooltip title="退出登录">
         <Button icon={<LoginOutlined />} type="text" style={{position: 'absolute', top: 0, left: 20, zIndex: 1000}} onClick={() => {
           navigate('/login');
@@ -168,7 +158,7 @@ const GraphPage = () => {
                 <CollapseButton collapsed={collapsed} onToggle={handleToggleCollapse} />
               </div>
           }
-          <div className="overlay-container">
+          <div className="overlay-container" style={{zIndex: (search || showNodeList) ? 20 : -10}}>
             <div className="overlay-content">
               { (search && !showNodeList) ? 
                 <SearchArea model={model} style={{position: 'absolute', height: '100%'}}/> : 
