@@ -27,7 +27,7 @@ const MyGraph = ({ elements, setModalInfo, highlightedNodes }) => {
         label: 'data(id)',
         width: 50,
         height: 50,
-        backgroundColor: 'lightblue',
+        backgroundColor: '#0074D9',
         color: '#fff',
         textHalign: 'center',
         textValign: 'center',
@@ -93,8 +93,8 @@ const MyGraph = ({ elements, setModalInfo, highlightedNodes }) => {
     // Add highlight to the new set of highlighted nodes
     highlightedNodes.forEach(highlightedNode => {
       const nid = highlightedNode.id;
-      cyRef.current.elements(`node[id = "${nid}"]`).addClass('highlight');
-
+      console.log(cyRef.current.$(`node[id = "${nid}"]`));
+      cyRef.current.$(`node[id = "${nid}"]`).addClass('highlight');
     });
   }, [highlightedNodes]);
 

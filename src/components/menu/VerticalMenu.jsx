@@ -4,6 +4,7 @@ import {
   NodeIndexOutlined,
   SearchOutlined,
   UploadOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import '../styles/Menu.css'; // Import CSS for additional styling
 
@@ -20,14 +21,18 @@ const VerticalMenu = ({
     setHighlightedNodes,
     setShowNodeList,
     nodeSearchInput, setNodeSearchInput,
-    setFile,
+    files, setFiles,
   }) => {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
+  const [isCreateGraphModalVisible, setIsCreateGraphModalVisible] = useState(false);
   const [dblist, setDbList] = useState([]);
   const [input1, setInput1] = useState('');
   const [input2, setInput2] = useState('');
+  const [input3, setInput3] = useState('');
+  const [input4, setInput4] = useState('');
+  
 
   const fileInputRef = useRef(null); // Create a ref for the file input element
 
@@ -50,7 +55,7 @@ const VerticalMenu = ({
   }, []);
 
   const onClick = (e) => {
-    console.log(selectedKeys);
+
     if (e.key === 'search') {
       setIsSearchModalVisible(true);
       return;
@@ -63,6 +68,12 @@ const VerticalMenu = ({
       return;
     }
 
+    if (e.key === 'create-graph') {
+      setSelectedKeys([]);
+      setIsCreateGraphModalVisible(true);
+      return;
+    }
+
     if (e.key === 'upload') {
       setSelectedKeys([]);
       fileInputRef.current.click(); // Use ref to trigger the file input dialog
@@ -70,7 +81,7 @@ const VerticalMenu = ({
     }
   };
 
-  const handleOk = async () => {
+  const handleNodeSearchOk = async () => {
     try {
       const response = await fetch('http://localhost:8000/search_nodes', {
         method: 'POST', // Use POST method
@@ -93,7 +104,7 @@ const VerticalMenu = ({
     }
   };
 
-  const handleCancel = () => {
+  const handleNodeSearchCancel = () => {
     setIsModalVisible(false);
   };
 
@@ -104,7 +115,8 @@ const VerticalMenu = ({
       message.success(`${file.name}文件上传成功`);
       // Reset the input value to allow re-uploading the same file if needed
       event.target.value = null;
-      setFile(file);
+      setFiles([...files, file]);
+      console.log(file);
     }
   };
 
@@ -120,6 +132,39 @@ const VerticalMenu = ({
   const handleGraphModalCancel = () => {
     setSelectedKeys([]);
     setIsGraphModalVisible(false);
+  };
+
+  const handleCreateGraphModalOk = async () => {
+    setIsCreateGraphModalVisible(false);
+
+    const selectedFile = files.find(file => file.name === input4);
+
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('upload_file', selectedFile);
+
+      try {
+        const response = await fetch(`http://localhost:8000/create_graph/${input3}`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('File uploaded successfully:', data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    } else {
+      console.log('No file found with the name:', input4);
+    }
+  };
+
+  const handleCreateGraphModalCancel = () => {
+    setIsCreateGraphModalVisible(false);
   };
 
   return (
@@ -161,6 +206,14 @@ const VerticalMenu = ({
                 <UploadOutlined />
               </Tooltip>
             ),
+          },
+          {
+            key: 'create-graph',
+            icon: (
+              <Tooltip title="创建图谱">
+                <PlusCircleOutlined />
+              </Tooltip>
+            ),
           }
         ]}
       />
@@ -170,7 +223,7 @@ const VerticalMenu = ({
         style={{ display: 'none' }} // Hide the file input
         onChange={handleFileChange} // Handle file selection
       />
-      <Modal title="节点搜索" open={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="节点搜索" open={isModalVisible} onOk={handleNodeSearchOk} onCancel={handleNodeSearchCancel}>
         <Input value={nodeSearchInput} onChange={(e) => setNodeSearchInput(e.target.value)} placeholder="请输入搜索关键词" />
       </Modal>
       <Modal title="信息搜索" open={isSearchModalVisible} onOk={() => setIsSearchModalVisible(false)} onCancel={() => setIsSearchModalVisible(false)}>
@@ -243,6 +296,35 @@ const VerticalMenu = ({
             onChange={(e) => setInput2(e.target.value)}
             style={{ flex: 1 }}
           />
+        </div>
+      </Modal>
+      <Modal
+        title="生成图谱"
+        open={isCreateGraphModalVisible}
+        onOk={handleCreateGraphModalOk}
+        onCancel={handleCreateGraphModalCancel}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px'  }}>
+          <span style={{ marginRight: '10px', minWidth: '100px' }}>数据库名:</span>
+          <Input
+            placeholder="输入储存图谱的数据库名称"
+            value={input3}
+            onChange={(e) => setInput3(e.target.value)}
+            style={{ flex: 1 }}
+          />
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center'}}>
+          <span style={{ marginRight: '10px', minWidth: '100px' }}>文件:</span>
+          <Select
+            placeholder="选择想要创建图谱的文件"
+            onChange={(value) => setInput4(value)}
+            style={{ flex: 1 }}
+          >
+            {files.map((file) => (
+              <Option key={file.name} value={file.name}>{file.name}</Option>
+            ))}
+          </Select>
         </div>
       </Modal>
     </>

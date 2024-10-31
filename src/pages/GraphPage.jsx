@@ -8,8 +8,7 @@ import VerticalMenu from '../components/menu/VerticalMenu';
 import CollapseButton from '../components/menu/CollapseButton';
 import NodeList from '../components/display/NodeList';
 import { notification, Popover, Button, Divider, Tooltip } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { LoginOutlined } from '@ant-design/icons';
+import { LoginOutlined, DownOutlined } from '@ant-design/icons';
 
 const GraphPage = () => {
   const [elements, setElements] = useState([]);
@@ -23,9 +22,8 @@ const GraphPage = () => {
   const [nodeSearchInput, setNodeSearchInput] = useState('');
   const [database, setDatabase] = useState(null);
   const [limit, setLimit] = useState(10);
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const model = 'qwen2:7b';
-  const navigate = useNavigate();
 
   const fetchData = async (database, limit) => {
     try {
@@ -106,36 +104,31 @@ const GraphPage = () => {
     setHighlightedNodes,
     setShowNodeList,
     nodeSearchInput, setNodeSearchInput,
-    setFile,
+    files,setFiles,
   };
 
   const content = (
     <div>
       <p>{`当前连接数据库：${database ? database : '无'}`}</p>
       <p>{`当前调用模型：${model}`}</p>
-      <p>
-        当前使用文件：
-        {file ? (
-          <a href={file.url} target="_blank" rel="noopener noreferrer">
-            {file.name}
-          </a>
-        ) : (
-          '无'
-        )}
-      </p>
     </div>
   );
 
   return (
     <MyContext.Provider value={{ search, setSearch, setSelectedKeys, database }}>
       <Tooltip title="退出登录">
-        <Button icon={<LoginOutlined />} type="text" style={{position: 'absolute', top: 0, left: 20, zIndex: 1000}} onClick={() => {
-          navigate('/login');
-        }} />
+        <Button
+          icon={<LoginOutlined />}
+          type="text"
+          style={{ position: 'absolute', top: 0, left: 20, zIndex: 1000 }}
+          onClick={() => {
+            window.location.replace('/');
+          }}
+        />
       </Tooltip>
       <div className="app-container" style={{ position: 'relative' }}>
         <Popover content={content} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
-            <Button type="text">显示当前信息</Button>
+            <Button type="text">显示当前信息 <DownOutlined /></Button>
         </Popover>
         <Divider style={{position: 'absolute', top: 10, width: '100%'}}/>
         <div className="inner-container">
