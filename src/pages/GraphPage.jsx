@@ -129,9 +129,9 @@ const GraphPage = () => {
               width: 200,
             }}
           >
-            <p>数据库：{database ? database : '无'}</p>
-            <p>模型：{model} </p>
-            <p>图谱生成状态: {currProcessingFile ? <p>{`正在生成 ${currProcessingFile.name} 的图谱`}<LoadingOutlined /></p> : <p>{'当前无任务'}</p>}</p>
+            <p><b>数据库：</b>{database ? database : '无'}</p>
+            <p><b>模型：</b>{model} </p>
+            <p><b>图谱生成状态: </b>{currProcessingFile ? <p>{`正在生成 ${currProcessingFile.name} 的图谱`}<LoadingOutlined /></p> : <p>{'当前无任务'}</p>}</p>
           </Card>} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
             <Button type="text">显示当前信息 <DownOutlined /></Button>
         </Popover>
