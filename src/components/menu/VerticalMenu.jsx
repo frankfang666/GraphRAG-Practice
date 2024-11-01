@@ -22,6 +22,7 @@ const VerticalMenu = ({
     setShowNodeList,
     nodeSearchInput, setNodeSearchInput,
     files, setFiles,
+    setCurrProcessingFile,
   }) => {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -140,10 +141,19 @@ const VerticalMenu = ({
     const selectedFile = files.find(file => file.name === input4);
 
     if (selectedFile) {
+
+      setCurrProcessingFile(selectedFile);
+
       const formData = new FormData();
       formData.append('upload_file', selectedFile);
 
       try {
+
+        notification.info({
+          message: '提示',
+          description: '图谱生成中，请在当前信息中查看状态',
+        });
+
         const response = await fetch(`http://localhost:8000/create_graph/${input3}`, {
           method: 'POST',
           body: formData,
@@ -154,11 +164,24 @@ const VerticalMenu = ({
         }
 
         const data = await response.json();
+        notification.success({
+          message: '提示',
+          description: `${selectedFile.name}文件的图谱生成成功`,
+        });
+        setCurrProcessingFile(null);
         console.log('File uploaded successfully:', data);
       } catch (error) {
+        notification.error({
+          message: '提示',
+          description: `${selectedFile.name}文件的图谱生成失败`,
+        });
         console.error('Error uploading file:', error);
       }
     } else {
+      notification.error({
+        message: '提示',
+        description: '文件不存在',
+      });
       console.log('No file found with the name:', input4);
     }
   };

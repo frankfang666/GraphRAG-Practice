@@ -7,8 +7,8 @@ import MyContext from '../MyContext';
 import VerticalMenu from '../components/menu/VerticalMenu';
 import CollapseButton from '../components/menu/CollapseButton';
 import NodeList from '../components/display/NodeList';
-import { notification, Popover, Button, Divider, Tooltip } from 'antd';
-import { LoginOutlined, DownOutlined } from '@ant-design/icons';
+import { notification, Popover, Button, Divider, Tooltip, Card } from 'antd';
+import { LoginOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const GraphPage = () => {
   const [elements, setElements] = useState([]);
@@ -23,6 +23,7 @@ const GraphPage = () => {
   const [database, setDatabase] = useState(null);
   const [limit, setLimit] = useState(10);
   const [files, setFiles] = useState([]);
+  const [currProcessingFile, setCurrProcessingFile] = useState(null);
   const model = 'qwen2:7b';
 
   const fetchData = async (database, limit) => {
@@ -105,14 +106,8 @@ const GraphPage = () => {
     setShowNodeList,
     nodeSearchInput, setNodeSearchInput,
     files,setFiles,
+    setCurrProcessingFile,
   };
-
-  const content = (
-    <div>
-      <p>{`当前连接数据库：${database ? database : '无'}`}</p>
-      <p>{`当前调用模型：${model}`}</p>
-    </div>
-  );
 
   return (
     <MyContext.Provider value={{ search, setSearch, setSelectedKeys, database }}>
@@ -127,7 +122,17 @@ const GraphPage = () => {
         />
       </Tooltip>
       <div className="app-container" style={{ position: 'relative' }}>
-        <Popover content={content} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
+        <Popover content={<Card
+            title="当前信息"
+            bordered={false}
+            style={{
+              width: 200,
+            }}
+          >
+            <p>数据库：{database ? database : '无'}</p>
+            <p>模型：{model} </p>
+            <p>图谱生成状态: {currProcessingFile ? <p>{`正在生成 ${currProcessingFile.name} 的图谱`}<LoadingOutlined /></p> : <p>{'当前无任务'}</p>}</p>
+          </Card>} style={{ position: 'absolute', top: 0, padding: '10px', zIndex: 1000 }}>
             <Button type="text">显示当前信息 <DownOutlined /></Button>
         </Popover>
         <Divider style={{position: 'absolute', top: 10, width: '100%'}}/>
